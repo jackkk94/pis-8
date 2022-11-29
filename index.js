@@ -1,8 +1,8 @@
 import Express from 'express';
-const app = Express();
+const app = Express()
 let counter = 0;
 
-console.log('hello')
+console.log("hello")
 app.get('/',(_, response) => {
   response.send(`${counter}`);
 });
