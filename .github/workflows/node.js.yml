@@ -1,9 +1,11 @@
+name: Test eslint
+
 on:
   push:
     branches: ['master']
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,5 +21,4 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run lint
-    - run: npm run start
   
