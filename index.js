@@ -1,4 +1,4 @@
-import Express from 'express';
+const Express = require('express');
 
 const app = Express();
 let counter = 0;
@@ -19,4 +19,4 @@ app.get('/about', (_, response) => {
 
 app.listen(3000);
 
-export default app;
+module.exports = app;
