@@ -1,22 +1,5 @@
-const Express = require('express');
+// eslint-disable-next-line import/no-self-import, import/extensions
+const server = require('./app.js');
 
-const app = Express();
-let counter = 0;
-
-// eslint-disable-next-line no-console
-app.get('/', (_, response) => {
-  response.send(`${counter}`);
-});
-
-app.get('/stat', (_, response) => {
-  // eslint-disable-next-line no-plusplus
-  response.send(`${++counter}`);
-});
-
-app.get('/about', (_, response) => {
-  response.send('<h3>Hello, jack!</h3>');
-});
-
+const app = server(0);
 app.listen(3000);
-
-module.exports = app;

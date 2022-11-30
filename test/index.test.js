@@ -1,7 +1,8 @@
 const supertest = require('supertest');
 
-const app = require('../index');
+const Server = require('../app');
 
+const app = Server(0).listen(3000);
 const request = supertest(app);
 
 describe('Test Counter routes', () => {
@@ -22,6 +23,7 @@ describe('Test Counter routes', () => {
   });
 
   afterAll((done) => {
+    app.close();
     done();
   });
 });
