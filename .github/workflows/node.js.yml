@@ -45,7 +45,7 @@ jobs:
     - run: npm ci
  
 
-  deploy:
+  build:
     needs: tests
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -70,3 +70,30 @@ jobs:
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
+    deploy:
+        needs:
+          - build
+        runs-on: ubuntu-latest
+        steps:
+          # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+          - uses: actions/checkout@v2
+          - name: Deploy COI VM
+            id: deploy-coi
+            uses: yc-actions/yc-coi-deploy@v1
+            env:
+              IMAGE_URL: cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:${{ github.sha }}
+              SSH_KEY: ${{ secrets.SSH_KEY }}
+            with:
+              yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+              folder-id: b1g6rnmt9kmibh25asn9
+              vm-name: epanchenko
+              vm-service-account-id: dn25qu5o791ucljkr2tk
+              vm-cores: 4
+              vm-memory: 4 GB
+              vm-core-fraction: 20
+              vm-zone-id: ru-central1-b
+              vm-subnet-id: e2loeruj3gmfdhtup2cj
+              vm-disk-type: network-hdd
+              vm-disk-size: 15GB
+              user-data-path: './user-data.yaml'
+              docker-compose-path: './docker-compose.yaml'
