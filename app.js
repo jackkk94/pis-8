@@ -12,7 +12,7 @@ module.exports = (counter) => {
   });
 
   app.get('/about', (_, response) => {
-    response.send('<h3>Hello, jack!!!</h3>');
+    response.send('<h3>Hello, jack!!</h3>');
   });
 
   return app;

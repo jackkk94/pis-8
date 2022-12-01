@@ -69,7 +69,7 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: b1g6rnmt9kmibh25asn9
-          vm-name: epanchenko
+          vm-name: epanchenko1
           vm-service-account-id: dn25qu5o791ucljkr2tk
           vm-cores: 4
           vm-memory: 4 GB
