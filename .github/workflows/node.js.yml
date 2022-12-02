@@ -32,6 +32,8 @@ jobs:
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
   pull:
+    needs:
+        - build
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
