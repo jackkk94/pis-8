@@ -55,7 +55,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-        run: 
           docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
   deploy:
     needs:
