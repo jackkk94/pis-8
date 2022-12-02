@@ -53,7 +53,6 @@ jobs:
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
-
   deploy:
     needs:
       - build
@@ -78,6 +77,6 @@ jobs:
           vm-zone-id: ru-central1-b
           vm-subnet-id: e2loeruj3gmfdhtup2cj
           vm-disk-type: network-hdd
-          vm-disk-size: 5GB
+          vm-disk-size: 40GB
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
