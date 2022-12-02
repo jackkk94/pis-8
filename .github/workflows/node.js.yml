@@ -5,7 +5,7 @@ on:
     branches: ['master']
 
 jobs:
-
+  
   build:
     needs: tests
     # The type of runner that the job will run on
