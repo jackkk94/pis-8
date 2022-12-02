@@ -59,7 +59,7 @@ jobs:
           docker run -d -p 3000:3000 cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
   deploy:
     needs:
-      - build
+      - pull
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
