@@ -20,4 +20,4 @@ jobs:
           #IMAGE_TAG: ${{ github.sha }}
           script: | 
             whoami
-            sudo docker pull cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:d301d44a3d87070e6fbc8891f7aa79c76943b451
+            dir
