@@ -16,4 +16,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: | 
             whoami
-            sudo docker pull cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:d301d44a3d87070e6fbc8891f7aa79c76943b451
+            curl -H Metadata-Flavor:Google 169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token | \
+            cut -f1 -d',' | \
+            cut -f2 -d':' | \
+            tr -d '"' | \
+            sudo docker login --username iam --password-stdin cr.yandex
+            sudo docker pull cr.yandex/crpa0nrlk4sddkdrjoqd/my-first-registry:feb3971d10d73b1796d426fcbd55e14c890d70dc
