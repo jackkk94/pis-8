@@ -5,11 +5,40 @@ on:
     branches: ['master']
 
 jobs:
-  build:
-  
+  tests:
     runs-on: ubuntu-latest
+       strategy:
+             matrix:
+               node-version: [14.x]
+
+       steps:
+       - uses: actions/checkout@v3
+       - name: Use Node.js ${{ matrix.node-version }}
+
+         uses: actions/setup-node@v3
+         with:
+           node-version: ${{ matrix.node-version }}
+           cache: 'npm'
+       - name: install dependencies
+         run: npm ci
+
+       - name: run lint
+         run: npm run lint
+
+       - name: run test
+         run: npm run test   
+  
+  build:
+    needs: tests
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
         uses: yc-actions/yc-cr-login@v0.1-alpha
         with:
@@ -23,11 +52,13 @@ jobs:
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+
   deploy:
     needs:
       - build
     runs-on: ubuntu-latest
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - name: Deploy COI VM
         id: deploy-coi
@@ -38,7 +69,7 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: b1g6rnmt9kmibh25asn9
-          vm-name: epanchenko
+          vm-name: epanchenko1
           vm-service-account-id: ajelqm9e5p4cq6g0mdcq
           vm-cores: 4
           vm-memory: 4 GB
@@ -49,6 +80,23 @@ jobs:
           vm-disk-size: 40GB
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
-      - name: pull docker image
-        run: |
-          docker pull cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:${{ github.sha }}
+
+  connect:
+    needs:
+      - deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: "51.250.28.105"
+        username: "epanchenko"
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        env:
+          CR_REGISTRY: crpa0nrlk4sddkdrjoqd
+          CR_REPOSITORY: my-first-registry
+          IMAGE_TAG: ${{ github.sha }}
+        script: | 
+          whoami
+          sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
