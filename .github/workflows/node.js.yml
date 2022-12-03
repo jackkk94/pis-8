@@ -14,6 +14,7 @@ jobs:
           host: "51.250.28.105"
           username: "epanchenko"
           key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
           script: | 
             whoami
-            dir
+            sudo docker pull cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:d301d44a3d87070e6fbc8891f7aa79c76943b451
