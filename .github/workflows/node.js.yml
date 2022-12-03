@@ -5,58 +5,6 @@ on:
     branches: ['master']
 
 jobs:
-
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Yandex Cloud CR "Login" Action for GitHub Actions
-        uses: yc-actions/yc-cr-login@v0.1-alpha
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-
-      - name: Build, tag, and push image to Yandex Cloud Container Registry
-        env:
-          CR_REGISTRY: crpa0nrlk4sddkdrjoqd
-          CR_REPOSITORY: my-first-registry
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-
-  deploy:
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - name: Deploy COI VM
-        id: deploy-coi
-        uses: yc-actions/yc-coi-deploy@v1
-        env:
-          IMAGE_URL: cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:${{ github.sha }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-          folder-id: b1g6rnmt9kmibh25asn9
-          vm-name: epanchenko1
-          vm-service-account-id: ajelqm9e5p4cq6g0mdcq
-          vm-cores: 4
-          vm-memory: 4 GB
-          vm-core-fraction: 20
-          vm-zone-id: ru-central1-b
-          vm-subnet-id: e2loeruj3gmfdhtup2cj
-          vm-disk-type: network-hdd
-          vm-disk-size: 40GB
-          user-data-path: './user-data.yaml'
-          docker-compose-path: './docker-compose.yaml'
-
   connect:
     needs:
       - deploy
@@ -71,8 +19,7 @@ jobs:
           port: ${{ secrets.PORT }}
         env:
           CR_REGISTRY: crpa0nrlk4sddkdrjoqd
-          CR_REPOSITORY: my-first-registry
-          IMAGE_TAG: ${{ github.sha }}
+          #IMAGE_TAG: ${{ github.sha }}
           script: | 
             whoami
-            sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+            sudo docker pull cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:d301d44a3d87070e6fbc8891f7aa79c76943b451
