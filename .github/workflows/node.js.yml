@@ -67,3 +67,5 @@ jobs:
           vm-disk-size: 40GB
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
+        run: |
+          docker pull cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:${{ github.sha }}
