@@ -69,10 +69,10 @@ jobs:
           username: "epanchenko"
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
-          env:
-            CR_REGISTRY: crpa0nrlk4sddkdrjoqd
-            CR_REPOSITORY: my-first-registry
-            IMAGE_TAG: ${{ github.sha }}
+        env:
+          CR_REGISTRY: crpa0nrlk4sddkdrjoqd
+          CR_REPOSITORY: my-first-registry
+          IMAGE_TAG: ${{ github.sha }}
           script: | 
             whoami
             sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
