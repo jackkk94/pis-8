@@ -35,7 +35,7 @@ jobs:
 
       - name: pull docker image
         env:
-        CR_REGISTRY: crpa0nrlk4sddkdrjoqd
+          CR_REGISTRY: crpa0nrlk4sddkdrjoqd
           CR_REPOSITORY: my-first-registry
           IMAGE_TAG: ${{ github.sha }}
         run: |
