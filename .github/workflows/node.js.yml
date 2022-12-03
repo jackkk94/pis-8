@@ -23,24 +23,6 @@ jobs:
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-  pull:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Yandex Cloud CR "Login" Action for GitHub Actions
-        uses: yc-actions/yc-cr-login@v0.1-alpha
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-
-      - name: pull docker image
-        env:
-          CR_REGISTRY: crpa0nrlk4sddkdrjoqd
-          CR_REPOSITORY: my-first-registry
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-
   deploy:
     needs:
       - pull
@@ -67,5 +49,6 @@ jobs:
           vm-disk-size: 40GB
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
+      - name: pull docker image
         run: |
           docker pull cr.yandex/crpk28lsfu91rns28316/yc-coi-github-action:${{ github.sha }}
