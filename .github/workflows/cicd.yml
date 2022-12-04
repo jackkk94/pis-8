@@ -10,30 +10,30 @@ env:
   CONTAINER_NAME: container-counter
 
 jobs:
-  # test:
-  # runs-on: ubuntu-latest
-  # strategy:
-  #   matrix:
-  #     node-version: [14.x]
-  # steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Use Node.js ${{ matrix.node-version }}
+  test:
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      node-version: [14.x]
+  steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
 
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: ${{ matrix.node-version }}
-  #     cache: 'npm'
-  #   - name: install dependencies
-  #     run: npm ci
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+      cache: 'npm'
+    - name: install dependencies
+      run: npm ci
 
-  #   - name: run lint
-  #     run: npm run lint
+    - name: run lint
+      run: npm run lint
 
-  #   - name: run test
-  #     run: npm run test         
+    - name: run test
+      run: npm run test         
        
   build:
-    # needs: test
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -50,7 +50,7 @@ jobs:
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
-  start:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
