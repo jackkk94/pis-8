@@ -73,6 +73,7 @@ jobs:
           vm-memory: 1 GB
           vm-core-fraction: 20
           vm-zone-id: ru-central1-b
+          vm-subnet-id: e2loeruj3gmfdhtup2cj
           vm-disk-type: network-hdd
           vm-disk-size: 2GB
           user-data-path: './user-data.yaml'
