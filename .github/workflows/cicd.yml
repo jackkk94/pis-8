@@ -72,8 +72,8 @@ jobs:
           vm-subnet-id: e2loeruj3gmfdhtup2cj
           vm-disk-type: network-hdd
           vm-disk-size: 40GB
-          user-data-path: '../../user-data.yaml'
-          docker-compose-path: '../../docker-compose.yaml'
+          user-data-path: './user-data.yaml'
+          docker-compose-path: './docker-compose.yaml'
   # start:
   #   needs: deploy
   #   runs-on: ubuntu-latest
