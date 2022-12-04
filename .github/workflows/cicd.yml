@@ -4,8 +4,8 @@ on:
   push:
     branches: ['master']
 env:
-  CR_REGISTRY: crpa0nrlk4sddkdrjoqd
-  CR_REPOSITORY: my-first-registry
+  {{CR_REGISTRY}}: crpa0nrlk4sddkdrjoqd
+  {{CR_REPOSITORY}}: my-first-registry
   IMAGE_TAG: image-counter
   CONTAINER_NAME: container-counter
 
@@ -47,8 +47,8 @@ jobs:
   #     - name: Build, tag, and push image to Yandex Cloud Container Registry
 
   #       run: |
-  #         docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-  #         docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+  #         docker build -t cr.yandex/${{CR_REGISTRY}}/${{CR_REPOSITORY}}:$IMAGE_TAG .
+  #         docker push cr.yandex/${{CR_REGISTRY}}/${{CR_REPOSITORY}}:$IMAGE_TAG
 
   deploy:
     #needs: build
@@ -66,8 +66,8 @@ jobs:
             cut -f1 -d',' | \
             cut -f2 -d':' | \
             tr -d '"' | \
-            sudo docker login --username iam --password-stdin cr.yandex | \
+            sudo docker login --username iam --password-stdin cr.yandex 
             sudo docker stop container-counter 
-            sudo docker rmi -f cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter 
-            sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter 
-            sudo docker run -d -p 3000:3000 --name container-counter --rm cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter
+            sudo docker rmi -f cr.yandex/${{CR_REGISTRY}}/${{CR_REPOSITORY}}:image-counter 
+            sudo docker pull cr.yandex/${{CR_REGISTRY}}/${{CR_REPOSITORY}}:image-counter 
+            sudo docker run -d -p 3000:3000 --name container-counter --rm cr.yandex/${{CR_REGISTRY}}/${{CR_REPOSITORY}}:image-counter
