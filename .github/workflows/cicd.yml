@@ -24,4 +24,5 @@ jobs:
             tr -d '"' | \
             sudo docker login --username iam --password-stdin cr.yandex
             sudo docker pull cr.yandex/crpa0nrlk4sddkdrjoqd/my-first-registry:feb3971d10d73b1796d426fcbd55e14c890d70dc
-            sudo docker run -d -p 3000:3000 --rm e5180bf02b69
+            sudo docker stop container-counter
+            sudo docker run -d -p 3000:3000 --rm container-counter
