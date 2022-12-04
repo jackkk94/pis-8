@@ -56,11 +56,6 @@ jobs:
     steps:
       - name: executing remote ssh commands using ssh
         uses: appleboy/ssh-action@master
-        env:
-          CR_REGISTRY: crpa0nrlk4sddkdrjoqd
-          CR_REPOSITORY: my-first-registry
-          IMAGE_TAG: image-counter
-          CONTAINER_NAME: container-counter
         with:
           host: "51.250.28.105"
           username: "epanchenko"
