@@ -8,7 +8,7 @@ const request = supertest(app);
 describe('Test Counter routes', () => {
   it('Test /about', async () => {
     const res = await request.get('/about');
-    expect(res.text).toBe('<h3>Hello, jack</h3>');
+    expect(res.text).toBe('<h3>Hello, jack!</h3>');
   });
 
   it('Test /', async () => {
