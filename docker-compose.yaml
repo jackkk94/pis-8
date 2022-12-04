@@ -6,3 +6,10 @@ services:
     restart: always
     ports:
       - '3000:3000'
+
+
+x-yc-disks:
+  - device_name: epanchenko
+    fs_type: ext4
+    host_path: /mnt/data
+    partition: 1
