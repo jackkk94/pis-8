@@ -4,8 +4,8 @@ on:
   push:
     branches: ['master']
 env:
-  {{CR_REGISTRY}}: crpa0nrlk4sddkdrjoqd
-  {{CR_REPOSITORY}}: my-first-registry
+  CR_REGISTRY: crpa0nrlk4sddkdrjoqd
+  CR_REPOSITORY: my-first-registry
   IMAGE_TAG: image-counter
   CONTAINER_NAME: container-counter
 
