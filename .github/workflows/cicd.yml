@@ -32,47 +32,67 @@ jobs:
   #   - name: run test
   #     run: npm run test         
        
-  # build:
-  #   needs: test
+  build:
+    # needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v0.1-alpha
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+
+  deploy:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Deploy COI VM
+        id: deploy-coi
+        uses: yc-actions/yc-coi-deploy@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          folder-id: b1g6rnmt9kmibh25asn9
+          vm-name: epanchenko
+          vm-service-account-id: dn25qu5o791ucljkr2tk
+          vm-cores: 4
+          vm-memory: 4 GB
+          vm-core-fraction: 20
+          vm-zone-id: ru-central1-b
+          vm-subnet-id: e2loeruj3gmfdhtup2cj
+          vm-disk-type: network-hdd
+          vm-disk-size: 40GB
+          user-data-path: '../../user-data.yaml'
+          docker-compose-path: '../../docker-compose.yaml'
+  # start:
+  #   needs: deploy
   #   runs-on: ubuntu-latest
 
   #   steps:
-  #     - uses: actions/checkout@v2
-
-  #     - name: Yandex Cloud CR "Login" Action for GitHub Actions
-  #       uses: yc-actions/yc-cr-login@v0.1-alpha
+  #     - name: executing remote ssh commands using ssh
+  #       uses: appleboy/ssh-action@master
   #       with:
-  #         yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-
-  #     - name: Build, tag, and push image to Yandex Cloud Container Registry
-
-  #       run: |
-  #         docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-  #         docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-
-  deploy:
-    #needs: build
-    runs-on: ubuntu-latest
-    env:
-      CR_REGISTRY: crpa0nrlk4sddkdrjoqd
-      CR_REPOSITORY: my-first-registry
-      IMAGE_TAG: image-counter
-      CONTAINER_NAME: container-counter
-    steps:
-      - name: executing remote ssh commands using ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: "51.250.28.105"
-          username: "epanchenko"
-          key: ${{ secrets.SSH_KEY }}
-          script: | 
-            whoami
-            curl -H Metadata-Flavor:Google 169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token | \
-            cut -f1 -d',' | \
-            cut -f2 -d':' | \
-            tr -d '"' | \
-            sudo docker login --username iam --password-stdin cr.yandex |
-            sudo docker stop container-counter |
-            sudo docker rmi -f cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter |
-            sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter |
-            sudo docker run -d -p 3000:3000 --name container-counter --rm cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter
+  #         host: "51.250.28.105"
+  #         username: "epanchenko"
+  #         key: ${{ secrets.SSH_KEY }}
+  #         script: | 
+  #           whoami
+  #           curl -H Metadata-Flavor:Google 169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token | \
+  #           cut -f1 -d',' | \
+  #           cut -f2 -d':' | \
+  #           tr -d '"' | \
+  #           sudo docker login --username iam --password-stdin cr.yandex |
+  #           sudo docker stop container-counter |
+  #           sudo docker rmi -f cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter |
+  #           sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter |
+  #           sudo docker run -d -p 3000:3000 --name container-counter --rm cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:image-counter
