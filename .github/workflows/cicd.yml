@@ -67,15 +67,14 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: b1g6rnmt9kmibh25asn9
-          vm-name: epanchenko
+          vm-name: epanchenkoe
           vm-service-account-id: ajegc790cl4bt7r0uoml
-          vm-cores: 4
-          vm-memory: 4 GB
+          vm-cores: 2
+          vm-memory: 1 GB
           vm-core-fraction: 20
           vm-zone-id: ru-central1-b
-          vm-subnet-id: e2loeruj3gmfdhtup2cj
           vm-disk-type: network-hdd
-          vm-disk-size: 40GB
+          vm-disk-size: 2GB
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
   # start:
