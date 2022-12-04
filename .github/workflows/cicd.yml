@@ -6,6 +6,7 @@ on:
 env:
   CR_REGISTRY: crpa0nrlk4sddkdrjoqd
   CR_REPOSITORY: my-first-registry
+  IMAGE_URL: cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
   IMAGE_TAG: image-counter
   CONTAINER_NAME: container-counter
 
