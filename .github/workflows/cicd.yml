@@ -67,7 +67,7 @@ jobs:
             cut -f2 -d':' | \
             tr -d '"' | \
             sudo docker login --username iam --password-stdin cr.yandex | \
-            sudo docker rmi cr.yandex/${CR_REGISTRY}/${CR_REPOSITORY}:image-counter | \
-            sudo docker pull cr.yandex/${CR_REGISTRY}/${CR_REPOSITORY}:image-counter | \
+            sudo docker rmi cr.yandex/crpa0nrlk4sddkdrjoqd/my-first-registry:image-counter | \
+            sudo docker pull cr.yandex/crpa0nrlk4sddkdrjoqd/my-first-registry:image-counter | \
             sudo docker stop container-counter | \
-            sudo docker run -d -p 3000:3000 --name container-counter --rm cr.yandex/${CR_REGISTRY}/${CR_REPOSITORY}:image-counter
+            sudo docker run -d -p 3000:3000 --name container-counter --rm cr.yandex/crpa0nrlk4sddkdrjoqd/my-first-registry:image-counter
