@@ -6,7 +6,6 @@ on:
 env:
   CR_REGISTRY: crpa0nrlk4sddkdrjoqd
   CR_REPOSITORY: my-first-registry
-  IMAGE_URL: cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
   IMAGE_TAG: image-counter
   CONTAINER_NAME: container-counter
 
@@ -61,6 +60,9 @@ jobs:
       - name: Deploy COI VM
         id: deploy-coi
         uses: yc-actions/yc-coi-deploy@v1
+        env:
+          IMAGE_URL: cr.yandex/crpa0nrlk4sddkdrjoqd/my-first-registry:image-counter
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: b1g6rnmt9kmibh25asn9
