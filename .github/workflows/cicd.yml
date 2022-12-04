@@ -3,11 +3,56 @@ name: ci/cd
 on:
   push:
     branches: ['master']
-
-
+env:
+  CR_REGISTRY: crpa0nrlk4sddkdrjoqd
+  CR_REPOSITORY: my-first-registry
+  IMAGE_TAG: image-counter
+  CONTAINER_NAME: container-counter
 
 jobs:
+  # tests:
+  # runs-on: ubuntu-latest
+  # strategy:
+  #   matrix:
+  #     node-version: [14.x]
+  # steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Use Node.js ${{ matrix.node-version }}
+
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: ${{ matrix.node-version }}
+  #     cache: 'npm'
+  #   - name: install dependencies
+  #     run: npm ci
+
+  #   - name: run lint
+  #     run: npm run lint
+
+  #   - name: run test
+  #     run: npm run test         
+       
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v0.1-alpha
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+
   run-container:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using ssh
@@ -23,6 +68,7 @@ jobs:
             cut -f2 -d':' | \
             tr -d '"' | \
             sudo docker login --username iam --password-stdin cr.yandex
-            sudo docker pull cr.yandex/crpa0nrlk4sddkdrjoqd/my-first-registry:feb3971d10d73b1796d426fcbd55e14c890d70dc
-            sudo docker stop container-counter
-            sudo docker run -d -p 3000:3000 --name container-counter --rm e5180bf02b69
+            sudo docker pull cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+            sudo docker stop $CONTAINER_NAME
+            sudo docker rmi $IMAGE_TAG
+            sudo docker run -d -p 3000:3000 --name $CONTAINER_NAME --rm $IMAGE_TAG
