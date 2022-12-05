@@ -39,13 +39,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+      - name: Yandex Cloud CR "Login"
         uses: yc-actions/yc-cr-login@v0.1-alpha
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-
       - name: Build, tag, and push image to Yandex Cloud Container Registry
-
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
